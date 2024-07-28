@@ -6,7 +6,7 @@ module comb (
     o_ready
     );
 
-    parameter IW=2, OW=5, N=5;
+    parameter IW=19, OW=19, N=3; //IW = input bitwidth, OW = output bitwidth, N = number of combs
 
     input wire i_clk;
     input wire i_ready;
@@ -26,7 +26,8 @@ module comb (
             for (i=1; i<N; i=i+1) begin
                 delay_line[i] <= delay_line[i-1];
             end
-            o_data <= {{(OW-IW){i_data[IW-1]}}, i_data} - {{(OW-IW){delay_line[N-1][IW-1]}}, delay_line[N-1]};
+            // difference equation... note: it's like Euler's method
+            o_data <= {{(OW-IW){i_data[IW-1]}}, i_data} - {{(OW-IW){delay_line[N-1][IW-1]}}, delay_line[N-1]}; // Lucky Equation fingers crossed! :)
             o_ready <= 1'b1;
         end else begin
             o_ready <= 1'b0;
